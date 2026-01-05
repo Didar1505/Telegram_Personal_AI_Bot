@@ -1,0 +1,5 @@
+pyrofork
+tgcrypto
+dnspython
+python-dotenv
+openai

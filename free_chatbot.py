@@ -21,11 +21,18 @@ class OpenRouterChatbot:
         ]
 
         try:
-            response = self.client.chat.completions.create(
+            stream = self.client.chat.completions.create(
                 model=self.model,
                 messages=messages,
-                extra_body={"reasoning": {"enabled": False}}
+                stream=True,
+                stream_options={"include_usage": True}
             )
-            return response.choices[0].message.content
+            
+            response_content = ""
+            for chunk in stream:
+                if chunk.choices and chunk.choices[0].delta.content:
+                    response_content += chunk.choices[0].delta.content
+            
+            return response_content
         except Exception as e:
             return f"Error: {str(e)}"
